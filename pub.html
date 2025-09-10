@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class PubSub {
+  constructor() {
+    this.events = {};
+  }
+
+  subscribe(event, callback) {
+    if (!this.events[event]) this.events[event] = [];
+    this.events[event].push(callback);
+  }
+
+  publish(event, data) {
+    if (this.events[event]) {
+      this.events[event].forEach(callback => callback(data));
+    }
+  }
+}
+
+// Create the messaging system
+const chatNotifications = new PubSub();
+
+// Users subscribe to different events
+chatNotifications.subscribe("message", (msg) => {
+  console.log("📨 New message received:", msg);
+});
+
+chatNotifications.subscribe("userJoined", (username) => {
+  console.log("👋 Welcome", username, "to the chat!");
+});
+
+chatNotifications.subscribe("userLeft", (username) => {
+  console.log("👋", username, "has left the chat.");
+});
+
+// Simulate events happening in the chat
+chatNotifications.publish("userJoined", "Alice");
+chatNotifications.publish("message", "Alice: Hey everyone!");
+chatNotifications.publish("userLeft", "Alice");
+
+    </script>
+</body>
+</html>
